@@ -15,6 +15,6 @@
 # 🔖 Sobre o Projeto
 
 
-O Desafio da Mobile2you foi desenvolvindo a replicar da tela de detalhe dos filmes do app TodoMovies, Ultilizando a API do The Movie DB.
+Desenvolvimento do clone da tela de detalhe dos filmes do app TodoMovies, Ultilizando a API do The Movie DB.
 
 
