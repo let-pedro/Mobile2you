@@ -1,11 +1,19 @@
 
 import UIKit
 
-class DetailsCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+protocol nameDetailsCollectionViewControllerDelegate {
+    func getListMovie(completion: @escaping (Bool) -> Void)
+    func DetailsMovie(completion: @escaping (Bool) -> Void)
+    var listMovies: [Movie] { get }
+    var MovieMain: Movie? { get }
     
-    var viewModel: DetailsViewModel! 
-    var listMovies: [Movie] = []
-    var MovieMain: Movie?
+}
+
+
+class DetailsCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+        
+    weak var delegate: nameDetailsCollectionViewControllerDelegate?
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -16,16 +24,22 @@ class DetailsCollectionViewController: UICollectionViewController, UICollectionV
     
     override func viewWillAppear(_ animated: Bool) {
         // List Movie
-        self.viewModel.getListMovie() { [self] success in
-            self.listMovies = success
+        delegate?.getListMovie(){ success in
+            guard success != false else {
+                print("Erro request")
+                return }
+            
             DispatchQueue.main.async {
                 self.collectionView.reloadData()
             }
         }
         
         // Details Movie
-        self.viewModel.getDetailsMovie() { [self] success in
-            self.MovieMain = success
+        
+        delegate?.DetailsMovie(){ success in
+            guard success != false else {
+                print("Erro request")
+                return }
         }
     }
     
@@ -62,8 +76,7 @@ class DetailsCollectionViewController: UICollectionViewController, UICollectionV
         }
         
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CollectionHeader.identifier, for: indexPath) as?  CollectionHeader
-        
-        header?.movieData = MovieMain
+        header?.movieData = delegate?.MovieMain
         return header!
     }
     
@@ -82,13 +95,13 @@ class DetailsCollectionViewController: UICollectionViewController, UICollectionV
 
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return listMovies.count
+        return delegate?.listMovies.count
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCell.identifier, for: indexPath) as? MovieCell
-        cell?.movieData = listMovies[indexPath.row]
+        cell?.movieData = delegate?.listMovies[indexPath.row]
         return cell!
     }
     

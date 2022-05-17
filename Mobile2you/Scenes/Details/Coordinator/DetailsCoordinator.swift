@@ -3,7 +3,7 @@ import Foundation
 import UIKit
 
 
-class DetailsCoordinator {
+class DetailsCoordinator{
     
     var window: UIWindow
     var viewModel: DetailsViewModel?
@@ -17,7 +17,7 @@ class DetailsCoordinator {
     func start(){
         viewModel = DetailsViewModel()
         viewController = DetailsCollectionViewController(collectionViewLayout: HeaderLayout())
-        viewController?.viewModel = viewModel!
+        viewController?.delegate = self
         window.rootViewController = viewController
     }
 }
